@@ -4,7 +4,7 @@ const supertest = require('supertest')
 const app = require('../src/app')
 const { makeArticlesArray } = require('./articles.fixtures')
 
-describe.only('Articles Endpoints', function() {
+describe('Articles Endpoints', function() {
     let db
 
     before('make knex instance', () => {
@@ -23,6 +23,14 @@ describe.only('Articles Endpoints', function() {
     afterEach('cleanup', () => db('blogful_articles').truncate() )
 
     describe(`GET /articles`, () => {
+        context(`Given no articles`, () => {
+            it(`responds with 200 and an empty list`, () => {
+                return supertest(app)
+                    .get('/articles')
+                    .expect(200, [])
+            })
+        })
+        
         context('given there are articles in the database', () => {
             const testArticles = makeArticlesArray();
     
@@ -41,6 +49,16 @@ describe.only('Articles Endpoints', function() {
     })
 
     describe(`GET /articles/:article_id`, () => {
+        context(`Given no articles`, () => {
+            it(`responds with 404`, () => {
+                const articleId = 123456
+                return supertest(app)
+                    .get(`/articles/${articleId}`)
+                    .expect(404)
+            })
+        })
+        
+        
         context('given there are articles in the database', () => {
             const testArticles = makeArticlesArray();
     
