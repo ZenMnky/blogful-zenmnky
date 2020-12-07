@@ -19,6 +19,8 @@ describe.only('Articles Endpoints', function() {
 
     before('clean the table', () => db('blogful_articles').truncate())
 
+    afterEach('cleanup', () => db('blogful_articles').truncate() )
+
     context('given there are articles in the database', () => {
         const testArticles = [
             {
@@ -61,6 +63,14 @@ describe.only('Articles Endpoints', function() {
             return supertest(app)
                 .get('/articles')
                 .expect(200, testArticles)
+        })
+
+        it(`GET /articles/:article_id responds with 200 and the specified article`, () => {
+            const articleId = 2
+            const expectedArticle = testArticles[articleId - 1]
+            return supertest(app)
+                .get(`/articles/${articleId}`)
+                .expect(200, expectedArticle)
         })
     })
 })
