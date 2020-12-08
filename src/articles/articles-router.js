@@ -11,13 +11,7 @@ articlesRouter
         const knexInstance = req.app.get('db')
         ArticlesService.getAllArticles(knexInstance)
         .then(articles => {
-            res.json({
-                  id: article.id,
-                  style: article.style,
-                  title: xss(article.title), // sanitize title
-                  content: xss(article.content), // sanitize content
-                  date_published: article.date_published
-                })
+            res.json(articles)
         })
         .catch(next) // pass errors to error handler middleware
     })
@@ -59,7 +53,13 @@ articlesRouter
                     .status(404)
                     .json({ message: `Article does not exist `})
             }
-            res.json(article)
+            res.json({
+                id: article.id,
+                style: article.style,
+                title: xss(article.title), // sanitize title
+                content: xss(article.content), // sanitize content
+                date_published: article.date_published
+            })
         })
         .catch(next)
     })
