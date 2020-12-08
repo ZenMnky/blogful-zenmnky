@@ -63,6 +63,18 @@ articlesRouter
         })
         .catch(next)
     })
+    .delete((req, res, next) => {
+        ArticlesService.deleteArticle(
+            req.app.get('db'),
+            req.params.article_id
+        )
+        .then(() => {
+            res
+                .status(204)
+                .end() // used to quickly end the response without any data
+        })
+        .catch(next)
+    })
 
 
 module.exports = articlesRouter
